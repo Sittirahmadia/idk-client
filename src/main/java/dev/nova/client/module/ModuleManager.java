@@ -16,6 +16,8 @@ public final class ModuleManager {
     public ModuleManager() {
         // ── Combat ────────────────────────────────────────────────────────────
         register(new AutoCrystal());
+        register(new AutoCrystalV2());
+        register(new AutoCart());
         register(new CrystalAura());
         register(new AnchorMacro());
         register(new AimAssist());
@@ -57,9 +59,9 @@ public final class ModuleManager {
 
     private void register(Module m) { modules.add(m); }
 
-    public List<Module> getModules()             { return modules; }
-    public List<Module> getEnabled()             { return modules.stream().filter(Module::isEnabled).collect(Collectors.toList()); }
-    public List<Module> getByCategory(Category c){ return modules.stream().filter(m -> m.getCategory() == c).collect(Collectors.toList()); }
+    public List<Module> getModules()              { return modules; }
+    public List<Module> getEnabled()              { return modules.stream().filter(Module::isEnabled).collect(Collectors.toList()); }
+    public List<Module> getByCategory(Category c) { return modules.stream().filter(m -> m.getCategory() == c).collect(Collectors.toList()); }
 
     @SuppressWarnings("unchecked")
     public <T extends Module> T get(Class<T> cls) {
