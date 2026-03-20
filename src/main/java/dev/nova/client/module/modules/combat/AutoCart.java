@@ -9,6 +9,7 @@ import dev.nova.client.util.InventoryUtil;
 import net.minecraft.block.AbstractRailBlock;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
+import java.util.Comparator;
 import net.minecraft.entity.vehicle.TntMinecartEntity;
 import net.minecraft.item.BowItem;
 import net.minecraft.item.Items;
