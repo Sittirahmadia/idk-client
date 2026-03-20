@@ -10,7 +10,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -21,40 +21,29 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
 
-      - name: Setup Gradle
+      - name: Setup Gradle 8.8
         uses: gradle/actions/setup-gradle@v3
         with:
           gradle-version: '8.8'
 
-      - name: Cache Gradle packages
+      - name: Cache Gradle & Loom
         uses: actions/cache@v4
         with:
           path: |
             ~/.gradle/caches
-            ~/.gradle/wrapper
             ~/.gradle/loom-cache
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
           restore-keys: |
             ${{ runner.os }}-gradle-
 
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
-
-      - name: Build with Gradle
-        run: ./gradlew build --no-daemon
+      - name: Build
+        run: gradle build --no-daemon
         env:
           GRADLE_OPTS: "-Dorg.gradle.daemon=false -Xmx2g"
 
-      - name: Upload built JAR
+      - name: Upload JAR
         uses: actions/upload-artifact@v4
         with:
           name: nova-client-${{ github.sha }}
-          path: build/libs/*-dev.jar
-          if-no-files-found: error
-
-      - name: Upload remapped JAR
-        uses: actions/upload-artifact@v4
-        with:
-          name: nova-client-remapped-${{ github.sha }}
           path: build/libs/*.jar
           if-no-files-found: error
