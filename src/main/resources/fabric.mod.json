@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "id": "nova",
+  "version": "1.0.0",
+  "name": "Nova Client",
+  "description": "Nova — Crystal PvP Client for Minecraft 1.21.1",
+  "authors": ["Nova"],
+  "environment": "client",
+  "entrypoints": {
+    "client": ["dev.nova.client.NovaClient"]
+  },
+  "mixins": ["nova.mixins.json"],
+  "accessWidener": "nova.accesswidener",
+  "depends": {
+    "fabricloader": ">=0.16.5",
+    "minecraft": "~1.21.1",
+    "fabric-api": "*",
+    "java": ">=21"
+  },
+  "suggests": {}
+}

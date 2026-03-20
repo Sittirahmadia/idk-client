@@ -1,0 +1,93 @@
+package dev.nova.client.util;
+
+import com.mojang.blaze3d.systems.RenderSystem;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.render.*;
+import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.entity.Entity;
+import net.minecraft.util.math.Vec3d;
+import org.joml.Matrix4f;
+
+public final class RenderUtil {
+
+    private static final MinecraftClient MC = MinecraftClient.getInstance();
+
+    // ── 2D ───────────────────────────────────────────────────────────────────
+
+    public static void rect(DrawContext ctx, int x, int y, int w, int h, int color) {
+        ctx.fill(x, y, x + w, y + h, color);
+    }
+
+    public static void rectOutline(DrawContext ctx, int x, int y, int w, int h, int thick, int color) {
+        rect(ctx, x, y, w, thick, color);
+        rect(ctx, x, y + h - thick, w, thick, color);
+        rect(ctx, x, y + thick, thick, h - thick * 2, color);
+        rect(ctx, x + w - thick, y + thick, thick, h - thick * 2, color);
+    }
+
+    public static void gradientRect(DrawContext ctx, int x, int y, int w, int h, int top, int bot) {
+        ctx.fillGradient(x, y, x + w, y + h, top, bot);
+    }
+
+    // ── Text ─────────────────────────────────────────────────────────────────
+
+    public static void text(DrawContext ctx, String text, int x, int y, int color, boolean shadow) {
+        TextRenderer tr = MC.textRenderer;
+        if (shadow) ctx.drawTextWithShadow(tr, text, x, y, color);
+        else        ctx.drawText(tr, text, x, y, color, false);
+    }
+
+    public static int textWidth(String text)  { return MC.textRenderer.getWidth(text); }
+    public static int textHeight()            { return MC.textRenderer.fontHeight; }
+
+    // ── Color ─────────────────────────────────────────────────────────────────
+
+    public static int argb(int a, int r, int g, int b) { return (a<<24)|(r<<16)|(g<<8)|b; }
+    public static int withAlpha(int color, int alpha)  { return (color & 0x00FFFFFF) | (alpha << 24); }
+
+    public static int lerpColor(int c1, int c2, float t) {
+        int a=(int)(((c1>>24)&0xFF)+(((c2>>24)&0xFF)-((c1>>24)&0xFF))*t);
+        int r=(int)(((c1>>16)&0xFF)+(((c2>>16)&0xFF)-((c1>>16)&0xFF))*t);
+        int g=(int)(((c1>> 8)&0xFF)+(((c2>> 8)&0xFF)-((c1>> 8)&0xFF))*t);
+        int b=(int)(( c1     &0xFF)+((c2      &0xFF)-( c1     &0xFF))*t);
+        return argb(a,r,g,b);
+    }
+
+    // ── 3D Entity Box ─────────────────────────────────────────────────────────
+
+    public static void drawEntityBox(MatrixStack matrices, Entity entity, float delta, int color) {
+        if (MC.gameRenderer == null) return;
+        Vec3d camPos = MC.gameRenderer.getCamera().getPos();
+        Vec3d ePos   = entity.getLerpedPos(delta);
+        float hw = entity.getWidth()  / 2f + 0.05f;
+        float h  = entity.getHeight() + 0.1f;
+
+        matrices.push();
+        matrices.translate(ePos.x - camPos.x, ePos.y - camPos.y, ePos.z - camPos.z);
+
+        RenderSystem.enableBlend();
+        RenderSystem.defaultBlendFunc();
+        RenderSystem.disableDepthTest();
+
+        var buf = Tessellator.getInstance().begin(VertexFormat.DrawMode.DEBUG_LINES, VertexFormats.POSITION_COLOR);
+        Matrix4f mat = matrices.peek().getPositionMatrix();
+        float rv=((color>>16)&0xFF)/255f, gv=((color>>8)&0xFF)/255f, bv=(color&0xFF)/255f, av=((color>>24)&0xFF)/255f;
+
+        float[][] corners = {
+            {-hw,0,-hw},{hw,0,-hw},{hw,0,hw},{-hw,0,hw},
+            {-hw,h,-hw},{hw,h,-hw},{hw,h,hw},{-hw,h,hw}
+        };
+        int[][] edges = {{0,1},{1,2},{2,3},{3,0},{4,5},{5,6},{6,7},{7,4},{0,4},{1,5},{2,6},{3,7}};
+        for (int[] edge : edges) {
+            float[] p1=corners[edge[0]], p2=corners[edge[1]];
+            buf.vertex(mat,p1[0],p1[1],p1[2]).color(rv,gv,bv,av);
+            buf.vertex(mat,p2[0],p2[1],p2[2]).color(rv,gv,bv,av);
+        }
+        BufferRenderer.drawWithGlobalProgram(buf.end());
+        RenderSystem.enableDepthTest();
+        RenderSystem.disableBlend();
+        matrices.pop();
+    }
+}
