@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: Checkout
         uses: actions/checkout@v4
 
       - name: Set up JDK 21
@@ -21,20 +21,19 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
 
-      - name: Setup Gradle 8.8
+      - name: Setup Gradle 8.10
         uses: gradle/actions/setup-gradle@v3
         with:
-          gradle-version: '8.8'
+          gradle-version: '8.10'
 
-      - name: Cache Gradle & Loom
+      - name: Cache Loom
         uses: actions/cache@v4
         with:
           path: |
             ~/.gradle/caches
             ~/.gradle/loom-cache
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-
+          key: ${{ runner.os }}-loom-${{ hashFiles('**/*.gradle*') }}
+          restore-keys: ${{ runner.os }}-loom-
 
       - name: Build
         run: gradle build --no-daemon
