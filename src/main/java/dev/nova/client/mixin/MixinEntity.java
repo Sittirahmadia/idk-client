@@ -2,6 +2,7 @@ package dev.nova.client.mixin;
 
 import dev.nova.client.NovaClient;
 import dev.nova.client.module.modules.combat.Hitboxes;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.Box;
 import org.spongepowered.asm.mixin.Mixin;
@@ -18,7 +19,8 @@ public abstract class MixinEntity {
         Hitboxes hb = NovaClient.INSTANCE.moduleManager.get(Hitboxes.class);
         if (hb == null || !hb.isEnabled()) return;
         Entity self = (Entity)(Object)this;
-        if (self == NovaClient.MC) return;
+        MinecraftClient mc = MinecraftClient.getInstance();
+        if (mc.player == null || self == mc.player) return;
         double exp = hb.getExpansion(self);
         if (exp <= 0) return;
         cir.setReturnValue(cir.getReturnValue().expand(exp, 0, exp));

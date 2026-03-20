@@ -23,7 +23,7 @@ public final class HoleESP extends Module {
     @EventHandler
     public void onRenderWorld(RenderWorldEvent e) {
         if (mc.player == null || mc.world == null || mc.gameRenderer == null) return;
-        BlockPos pp = mc.player.getBlockPos(); int r = (int)range.getValue();
+        BlockPos pp = mc.player.getBlockPos(); int r = range.intValue();
         int col = RenderUtil.argb(alpha.intValue(), 50, 200, 255);
         Vec3d cam = mc.gameRenderer.getCamera().getPos();
 

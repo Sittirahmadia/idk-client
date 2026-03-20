@@ -96,7 +96,7 @@ public final class BurrowBot extends Module {
 
     private BlockPos findNearestHole() {
         BlockPos pp = mc.player.getBlockPos();
-        int r = (int) searchRange.getValue();
+        int r = searchRange.intValue();
         BlockPos best = null;
         double bestDist = Double.MAX_VALUE;
 

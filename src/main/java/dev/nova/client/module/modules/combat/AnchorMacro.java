@@ -131,7 +131,7 @@ public final class AnchorMacro extends Module {
         if (anchor == null) return;
         if (onlyOwn.getValue() && !ownedAnchors.contains(anchor)) return;
 
-        int slot = (int) explodeSlot.getValue() - 1;
+        int slot = explodeSlot.intValue() - 1;
 
         // Switch to explode slot
         if (mc.player.getInventory().selectedSlot != slot) {
@@ -263,7 +263,7 @@ public final class AnchorMacro extends Module {
             if (state.getBlock() != Blocks.RESPAWN_ANCHOR) continue;
 
             int c = state.get(RespawnAnchorBlock.CHARGES);
-            boolean isCharged = c >= (int) chargeCount.getValue();
+            boolean isCharged = c >= chargeCount.intValue();
 
             if (charged != isCharged) continue;
             if (eye.distanceTo(Vec3d.ofCenter(pos)) > rng) continue;

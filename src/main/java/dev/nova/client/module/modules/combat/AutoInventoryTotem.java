@@ -101,7 +101,7 @@ public final class AutoInventoryTotem extends Module {
         }
 
         // Health gate
-        if (healthGate.getValue() && mc.player.getHealth() > (float) healthThr.getValue()) return;
+        if (healthGate.getValue() && mc.player.getHealth() > healthThr.floatValue()) return;
 
         // First tick the screen is detected open this session
         if (openClock == -1) {

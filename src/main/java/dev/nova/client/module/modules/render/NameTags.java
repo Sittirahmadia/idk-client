@@ -37,7 +37,7 @@ public final class NameTags extends Module {
             Vec3d look = Vec3d.fromPolar(cam.getPitch(), cam.getYaw());
             if (look.dotProduct(rel.normalize()) < 0) continue;
 
-            StringBuilder sb = new StringBuilder("§f").append(p.getEntityName());
+            StringBuilder sb = new StringBuilder("§f").append(p.getName().getString());
             if (health.getValue()) {
                 float hp = p.getHealth() + p.getAbsorptionAmount();
                 String c = hp > 14 ? "§a" : hp > 7 ? "§e" : "§c";

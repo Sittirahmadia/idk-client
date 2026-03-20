@@ -87,12 +87,12 @@ public final class AutoDoubleHand extends Module {
 
         // ── 2. ON HEALTH ───────────────────────────────────────────────────
         if (onHealth.getValue()) {
-            if (hp <= (float) health.getValue() && !belowHealthLatch) {
+            if (hp <= health.floatValue() && !belowHealthLatch) {
                 belowHealthLatch = true;
                 doSwitch();
                 return;
             }
-            if (hp > (float) health.getValue()) belowHealthLatch = false;
+            if (hp > health.floatValue()) belowHealthLatch = false;
         }
 
         // ── 3. PREDICT ─────────────────────────────────────────────────────
@@ -105,7 +105,7 @@ public final class AutoDoubleHand extends Module {
             if (!near) return;
         }
 
-        float killThreshold = hp - (float) buffer.getValue();
+        float killThreshold = hp - buffer.floatValue();
         List<Vec3d> checkPos = gatherCrystalPositions();
 
         for (Vec3d pos : checkPos) {
@@ -130,7 +130,7 @@ public final class AutoDoubleHand extends Module {
         // Predicted placements on obsidian/bedrock
         if (predictPos.getValue()) {
             BlockPos bp = mc.player.getBlockPos();
-            int r = (int) predRange.getValue();
+            int r = predRange.intValue();
             for (int dx = -r; dx <= r; dx++)
                 for (int dz = -r; dz <= r; dz++)
                     for (int dy = -2; dy <= 3; dy++) {

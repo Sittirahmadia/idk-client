@@ -8,10 +8,10 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(ClientPlayerInteractionManager.class)
+@Mixin(value = ClientPlayerInteractionManager.class, priority = 999)
 public class MixinClientPlayerInteractionManager {
 
-    @Inject(method = "getBlockBreakingCooldown", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "getBlockBreakingCooldown()I", at = @At("HEAD"), cancellable = true, require = 0)
     private void onGetCooldown(CallbackInfoReturnable<Integer> cir) {
         if (NovaClient.INSTANCE == null) return;
         NoBreakDelay mod = NovaClient.INSTANCE.moduleManager.get(NoBreakDelay.class);

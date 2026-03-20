@@ -40,7 +40,7 @@ public final class PopCounter extends Module {
         if (player == mc.player && !selfPops.getValue()) return;
 
         String uuid  = player.getUuidAsString();
-        String name  = player.getEntityName();
+        String name  = player.getName().getString();
         int count    = popCounts.merge(uuid, 1, Integer::sum);
 
         if (chat.getValue() && mc.inGameHud != null) {

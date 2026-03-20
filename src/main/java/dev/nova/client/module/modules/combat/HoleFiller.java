@@ -43,7 +43,7 @@ public final class HoleFiller extends Module {
         if (!InventoryUtil.switchToItem(Items.OBSIDIAN)) return;
 
         BlockPos pp = mc.player.getBlockPos();
-        int r = (int) range.getValue();
+        int r = range.intValue();
 
         outer:
         for (int dx = -r; dx <= r; dx++) for (int dz = -r; dz <= r; dz++) for (int dy = -2; dy <= 0; dy++) {
